@@ -1,0 +1,123 @@
+<title>TikTok Callback</title>
+<style>
+:root {
+  --bg: #101820;
+  --surface: #182430;
+  --fg: #f2f5f7;
+  --fg-muted: #9aa7b2;
+  --accent: #25f4ee;
+  --border: #263442;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --fg: #101820;
+    --fg-muted: #5b6670;
+    --accent: #0f9e98;
+    --border: #dde3e8;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --fg: #101820;
+  --fg-muted: #5b6670;
+  --accent: #0f9e98;
+  --border: #dde3e8;
+  color-scheme: light;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  margin: 0;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+main {
+  max-width: 480px;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-align: center;
+}
+h1 {
+  font-size: 1.3rem;
+  margin: 0 0 8px;
+}
+p {
+  color: var(--fg-muted);
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+.code-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  word-break: break-all;
+  color: var(--accent);
+  text-align: left;
+  margin-bottom: 16px;
+}
+.label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-muted);
+  margin-bottom: 6px;
+}
+button {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=IBM+Plex+Mono&display=swap">
+<main>
+  <h1 id="title">Aguardando retorno do TikTok…</h1>
+  <p id="sub">Esta página só recebe o código de autorização. Nenhum dado é enviado a lugar nenhum.</p>
+  <div id="result" hidden>
+    <div class="label">code</div>
+    <div class="code-box" id="codeBox"></div>
+    <button id="copyBtn">Copiar código</button>
+  </div>
+</main>
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code');
+  const error = params.get('error');
+  const result = document.getElementById('result');
+  const title = document.getElementById('title');
+  const sub = document.getElementById('sub');
+  if (code) {
+    title.textContent = 'Autorizado!';
+    sub.textContent = 'Copie o código abaixo e volte pro Claude.';
+    document.getElementById('codeBox').textContent = code;
+    result.hidden = false;
+    document.getElementById('copyBtn').addEventListener('click', function () {
+      try { navigator.clipboard.writeText(code); } catch (e) {}
+    });
+  } else if (error) {
+    title.textContent = 'Autorização recusada';
+    sub.textContent = String(error);
+  }
+})();
+</script>
